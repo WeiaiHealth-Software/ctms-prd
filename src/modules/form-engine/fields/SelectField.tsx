@@ -1,9 +1,12 @@
+import { classNames } from '../../../lib/classNames'
+
 type SelectFieldProps = {
   label: string
   value: string
   required?: boolean
   options: string[]
   readOnly?: boolean
+  error?: string
   onChange: (value: string) => void
 }
 
@@ -13,6 +16,7 @@ export default function SelectField({
   required,
   options,
   readOnly,
+  error,
   onChange,
 }: SelectFieldProps) {
   return (
@@ -25,7 +29,10 @@ export default function SelectField({
         value={value || ''}
         disabled={readOnly}
         onChange={(e) => onChange(e.target.value)}
-        className="w-full h-11 rounded-xl border border-slate-200 px-3 text-sm outline-none focus:border-blue-500 bg-white disabled:bg-slate-50 disabled:text-slate-500"
+        className={classNames(
+          'w-full h-11 rounded-xl border px-3 text-sm outline-none bg-white disabled:bg-slate-50 disabled:text-slate-500',
+          error ? 'border-rose-400 focus:border-rose-500' : 'border-slate-200 focus:border-blue-500'
+        )}
       >
         <option value="">请选择</option>
         {options.map((op) => (
@@ -34,6 +41,7 @@ export default function SelectField({
           </option>
         ))}
       </select>
+      {error && <div className="mt-1 text-xs text-rose-500">{error}</div>}
     </div>
   )
 }

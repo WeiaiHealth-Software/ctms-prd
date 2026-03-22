@@ -25,3 +25,4 @@ export type BuilderField = {
 }
 
 export type DynamicFormValue = Record<string, any>
+export type DynamicFormErrors = Record<string, string>

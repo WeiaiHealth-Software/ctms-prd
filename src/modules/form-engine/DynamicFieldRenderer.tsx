@@ -14,6 +14,7 @@ type DynamicFieldRendererProps = {
   field: BuilderField
   value: any
   readOnly?: boolean
+  error?: string
   onChange: (value: any) => void
 }
 
@@ -21,6 +22,7 @@ export default function DynamicFieldRenderer({
   field,
   value,
   readOnly,
+  error,
   onChange,
 }: DynamicFieldRendererProps) {
   switch (field.type) {
@@ -35,6 +37,7 @@ export default function DynamicFieldRenderer({
           placeholder={field.placeholder}
           required={field.required}
           readOnly={readOnly}
+          error={error}
           onChange={onChange}
         />
       )
@@ -47,6 +50,7 @@ export default function DynamicFieldRenderer({
           placeholder={field.placeholder}
           required={field.required}
           readOnly={readOnly}
+          error={error}
           onChange={onChange}
         />
       )
@@ -58,6 +62,7 @@ export default function DynamicFieldRenderer({
           value={value || ''}
           required={field.required}
           readOnly={readOnly}
+          error={error}
           onChange={onChange}
         />
       )
@@ -70,6 +75,7 @@ export default function DynamicFieldRenderer({
           required={field.required}
           options={field.options || []}
           readOnly={readOnly}
+          error={error}
           onChange={onChange}
         />
       )
@@ -94,6 +100,7 @@ export default function DynamicFieldRenderer({
           placeholder={field.placeholder}
           required={field.required}
           readOnly={readOnly}
+          error={error}
           onChange={onChange}
         />
       )
