@@ -1,4 +1,4 @@
-import { createBrowserRouter, Navigate } from 'react-router'
+import { createHashRouter, Navigate } from 'react-router'
 import AppLayout from './layout/AppLayout'
 
 import ProjectListPage from '../pages/projects/ProjectListPage'
@@ -8,7 +8,7 @@ import AppointmentPage from '../pages/appointments/AppointmentPage'
 import TemplateCenterPage from '../pages/templates/TemplateCenterPage'
 import TemplateBuilderPage from '../pages/templates/TemplateBuilderPage'
 
-export const router = createBrowserRouter([
+export const router = createHashRouter([
   {
     path: '/',
     element: <AppLayout />,

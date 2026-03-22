@@ -1,4 +1,4 @@
-import type { Subject } from '../../types/subject'
+import type { Subject } from '../../../types/subject'
 
 type SubjectInfoCardProps = {
   subject: Subject
