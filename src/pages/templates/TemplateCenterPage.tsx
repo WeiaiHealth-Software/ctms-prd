@@ -6,10 +6,24 @@ import StatCard from '../../modules/dashboard/StatCard'
 import TemplateDetail from '../../modules/templates/components/TemplateDetail'
 import TemplateList from '../../modules/templates/components/TemplateList'
 import { templates } from '../../data/templates'
+import { classNames } from '../../lib/classNames'
+
+type TemplateStatusFilter = 'all' | 'enabled' | 'draft'
 
 export default function TemplateCenterPage() {
   const navigate = useNavigate()
-  const [selectedTemplateId, setSelectedTemplateId] = useState<string | null>(templates[0]?.id || null)
+  const [selectedTemplateId, setSelectedTemplateId] = useState<string | null>(null)
+  const [statusFilter, setStatusFilter] = useState<TemplateStatusFilter>('all')
+
+  const getFilteredTemplates = (filter: TemplateStatusFilter) => {
+    if (filter === 'all') return templates
+    if (filter === 'enabled') return templates.filter((tpl) => tpl.status === '启用中')
+    return templates.filter((tpl) => tpl.status === '草稿')
+  }
+
+  const filteredTemplates = useMemo(() => {
+    return getFilteredTemplates(statusFilter)
+  }, [statusFilter])
 
   const selectedTemplate = useMemo(
     () => templates.find((item) => item.id === selectedTemplateId) || null,
@@ -24,8 +38,8 @@ export default function TemplateCenterPage() {
         <StatCard title="模板总数" value="3" hint="支持按访视类型复用" />
       </div>
 
-      <div className="grid grid-cols-12 gap-6">
-        <div className="col-span-4">
+      <div className="flex gap-6">
+        <div className="w-[380px] shrink-0">
           <SectionCard
             title="模板列表"
             extra={
@@ -38,15 +52,53 @@ export default function TemplateCenterPage() {
               </button>
             }
           >
+            <div
+              role="radiogroup"
+              aria-label="模板状态筛选"
+              className="mb-4 inline-flex rounded-xl bg-slate-50 p-1"
+            >
+              {[
+                { label: '全部', value: 'all' as const },
+                { label: '已启用', value: 'enabled' as const },
+                { label: '草稿', value: 'draft' as const },
+              ].map((option) => {
+                const active = statusFilter === option.value
+                return (
+                  <button
+                    key={option.value}
+                    type="button"
+                    role="radio"
+                    aria-checked={active}
+                    onClick={() => {
+                      const nextFilter = option.value
+                      const nextTemplates = getFilteredTemplates(nextFilter)
+                      setSelectedTemplateId((prev) => {
+                        if (!prev) return prev
+                        return nextTemplates.some((tpl) => tpl.id === prev) ? prev : null
+                      })
+                      setStatusFilter(nextFilter)
+                    }}
+                    className={classNames(
+                      'h-9 px-4 rounded-lg text-sm font-medium transition',
+                      active
+                        ? 'bg-white text-slate-900 shadow-sm ring-1 ring-slate-200'
+                        : 'text-slate-600 hover:text-slate-900'
+                    )}
+                  >
+                    {option.label}
+                  </button>
+                )
+              })}
+            </div>
             <TemplateList
-              templates={templates}
+              templates={filteredTemplates}
               selectedTemplateId={selectedTemplateId}
               onSelect={setSelectedTemplateId}
             />
           </SectionCard>
         </div>
 
-        <div className="col-span-8">
+        <div className="flex-1 min-w-0">
           <TemplateDetail template={selectedTemplate} />
         </div>
       </div>

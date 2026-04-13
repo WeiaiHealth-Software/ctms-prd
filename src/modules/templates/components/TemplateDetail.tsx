@@ -1,3 +1,4 @@
+import { FileText } from 'lucide-react'
 import { useNavigate } from 'react-router'
 import SectionCard from '../../../components/common/SectionCard'
 import type { Template } from '../../../types/template'
@@ -26,8 +27,14 @@ export default function TemplateDetail({ template }: TemplateDetailProps) {
 
   if (!template) {
     return (
-      <div className="rounded-2xl border border-dashed border-slate-300 bg-slate-50 p-10 text-center text-sm text-slate-400">
-        请选择左侧模板查看详情
+      <div className="rounded-2xl border border-dashed border-slate-300 bg-slate-50 px-10 py-16">
+        <div className="mx-auto flex max-w-sm flex-col items-center text-center">
+          <div className="flex h-16 w-16 items-center justify-center rounded-2xl bg-white ring-1 ring-slate-200">
+            <FileText className="h-8 w-8 text-slate-400" />
+          </div>
+          <div className="mt-5 text-base font-semibold text-slate-800">暂无选中模板</div>
+          <div className="mt-2 text-sm text-slate-400">从左侧模板列表中选择一个模板，查看结构预览与基础信息。</div>
+        </div>
       </div>
     )
   }
@@ -70,25 +77,13 @@ export default function TemplateDetail({ template }: TemplateDetailProps) {
         </div>
       </SectionCard>
 
-      <div className="grid grid-cols-2 gap-6">
-        <SectionCard title="结构预览">
-          <div className="space-y-4">
-            {template.sections.map((section) => (
-              <PreviewBlock key={section.title} title={section.title} items={section.items} />
-            ))}
-          </div>
-        </SectionCard>
-
-        <SectionCard title="模板设计建议">
-          <ul className="space-y-3 text-sm text-slate-600 leading-6">
-            <li>• 将模板拆成“区块 + 字段”结构，便于后续做动态渲染引擎。</li>
-            <li>• 模板与访视绑定时，应固定版本，避免研究中途模板漂移。</li>
-            <li>• 左右眼字段建议统一为 Eye Grid 类型，减少重复配置。</li>
-            <li>• 异常情况类字段优先抽成子表，提高 AE / SAE 复用性。</li>
-            <li>• 字段级别建议增加必填、单位、校验规则、显示逻辑配置。</li>
-          </ul>
-        </SectionCard>
-      </div>
+      <SectionCard title="结构预览">
+        <div className="space-y-4">
+          {template.sections.map((section) => (
+            <PreviewBlock key={section.title} title={section.title} items={section.items} />
+          ))}
+        </div>
+      </SectionCard>
     </div>
   )
 }
