@@ -31,17 +31,40 @@ export default function TemplateCenterPage() {
   )
 
   return (
-    <div className="space-y-6">
-      <div className="grid grid-cols-3 gap-4">
-        <StatCard title="启用中模板" value="2" hint="当前可绑定项目和访视" />
-        <StatCard title="草稿模板" value="1" hint="待确认字段与显示逻辑" />
-        <StatCard title="模板总数" value="3" hint="支持按访视类型复用" />
-      </div>
+    <div className="flex gap-6">
+      <div className="w-[380px] shrink-0 space-y-6">
+        <div className="grid grid-cols-3 gap-3">
+          <StatCard 
+            title="启用中" 
+            value="2" 
+            hint="可绑定" 
+            className="!p-3" 
+            titleClassName="text-xs !mb-1" 
+            valueClassName="text-xl" 
+            hintClassName="text-[10px] mt-1 truncate" 
+          />
+          <StatCard 
+            title="草稿" 
+            value="1" 
+            hint="待确认" 
+            className="!p-3" 
+            titleClassName="text-xs !mb-1" 
+            valueClassName="text-xl" 
+            hintClassName="text-[10px] mt-1 truncate" 
+          />
+          <StatCard 
+            title="总数" 
+            value="3" 
+            hint="可复用" 
+            className="!p-3" 
+            titleClassName="text-xs !mb-1" 
+            valueClassName="text-xl" 
+            hintClassName="text-[10px] mt-1 truncate" 
+          />
+        </div>
 
-      <div className="flex gap-6">
-        <div className="w-[380px] shrink-0">
-          <SectionCard
-            title="模板列表"
+        <SectionCard
+          title="模板列表"
             extra={
               <button
                 onClick={() => navigate('/templates/builder')}
@@ -102,6 +125,5 @@ export default function TemplateCenterPage() {
           <TemplateDetail template={selectedTemplate} />
         </div>
       </div>
-    </div>
   )
 }
