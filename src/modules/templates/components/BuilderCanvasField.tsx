@@ -1,12 +1,13 @@
 import { Copy, GripVertical, Trash2 } from 'lucide-react'
 import type { BuilderField } from '../../form-engine/types'
+import { useSortable } from '@dnd-kit/sortable'
+import { CSS } from '@dnd-kit/utilities'
+import DynamicFieldRenderer from '../../form-engine/DynamicFieldRenderer'
 
 type BuilderCanvasFieldProps = {
   field: BuilderField
   active?: boolean
   onSelect: () => void
-  onMoveUp: () => void
-  onMoveDown: () => void
   onDuplicate: () => void
   onDelete: () => void
 }
@@ -15,69 +16,88 @@ export default function BuilderCanvasField({
   field,
   active,
   onSelect,
-  onMoveUp,
-  onMoveDown,
   onDuplicate,
   onDelete,
 }: BuilderCanvasFieldProps) {
+  const {
+    attributes,
+    listeners,
+    setNodeRef,
+    transform,
+    transition,
+    isDragging,
+  } = useSortable({
+    id: field.id,
+    data: {
+      type: 'canvas-item',
+      field,
+    },
+  })
+
+  const style = {
+    transform: CSS.Translate.toString(transform),
+    transition,
+    zIndex: isDragging ? 10 : 1,
+    opacity: isDragging ? 0.5 : 1,
+  }
+
   return (
-    <button
-      onClick={onSelect}
-      className={`w-full text-left rounded-xl border p-4 transition ${
-        active ? 'border-blue-300 bg-blue-50' : 'border-slate-200 bg-white hover:border-slate-300'
+    <div
+      ref={setNodeRef}
+      style={style}
+      className={`relative group rounded-xl border-2 transition-colors bg-white ${
+        active ? 'border-blue-500 shadow-sm' : 'border-transparent hover:border-blue-200'
       }`}
+      onClick={(e) => {
+        e.stopPropagation()
+        onSelect()
+      }}
     >
-      <div className="flex items-start justify-between gap-3">
-        <div className="flex items-start gap-3">
-          <GripVertical className="w-4 h-4 text-slate-400 mt-1" />
-          <div>
-            <div className="font-medium text-slate-900">{field.label}</div>
-            <div className="mt-1 text-xs text-slate-400">字段 Key：{field.key}</div>
-          </div>
-        </div>
-        <span className="px-2 py-0.5 rounded-full bg-slate-100 text-slate-500 text-xs">
-          {field.type}
-        </span>
+      {/* Handle */}
+      <div
+        {...attributes}
+        {...listeners}
+        className="absolute left-0 top-0 bottom-0 w-6 flex items-center justify-center cursor-grab opacity-0 group-hover:opacity-100 transition-opacity bg-slate-50 hover:bg-slate-100 rounded-l-xl z-10"
+      >
+        <GripVertical className="w-4 h-4 text-slate-400" />
       </div>
 
-      <div className="mt-4 flex items-center gap-2">
-        <button
-          onClick={(e) => {
-            e.stopPropagation()
-            onMoveUp()
-          }}
-          className="px-2 py-1 rounded-lg text-xs border border-slate-200 hover:bg-slate-50"
-        >
-          上移
-        </button>
-        <button
-          onClick={(e) => {
-            e.stopPropagation()
-            onMoveDown()
-          }}
-          className="px-2 py-1 rounded-lg text-xs border border-slate-200 hover:bg-slate-50"
-        >
-          下移
-        </button>
+      {/* Toolbar */}
+      <div className="absolute right-2 -top-3 flex items-center gap-1 opacity-0 group-hover:opacity-100 transition-opacity z-20 bg-white border border-slate-200 px-1 py-1 rounded-lg shadow-sm">
         <button
           onClick={(e) => {
             e.stopPropagation()
             onDuplicate()
           }}
-          className="p-2 rounded-lg text-slate-500 hover:bg-slate-100"
+          className="p-1.5 text-slate-500 hover:text-blue-600 hover:bg-blue-50 rounded-md"
+          title="复制"
         >
-          <Copy className="w-4 h-4" />
+          <Copy className="w-3.5 h-3.5" />
         </button>
         <button
           onClick={(e) => {
             e.stopPropagation()
             onDelete()
           }}
-          className="p-2 rounded-lg text-rose-500 hover:bg-rose-50"
+          className="p-1.5 text-slate-500 hover:text-rose-600 hover:bg-rose-50 rounded-md"
+          title="删除"
         >
-          <Trash2 className="w-4 h-4" />
+          <Trash2 className="w-3.5 h-3.5" />
         </button>
       </div>
-    </button>
+
+      {/* Content */}
+      <div className="p-5 pl-8 pointer-events-none">
+        <DynamicFieldRenderer
+          field={field}
+          value={undefined}
+          readOnly={true}
+          onChange={() => {}}
+        />
+      </div>
+      
+      {/* Overlay to catch clicks instead of inputs */}
+      <div className="absolute inset-0 z-0" />
+    </div>
   )
 }

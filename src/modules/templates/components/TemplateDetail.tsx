@@ -2,24 +2,12 @@ import { FileText } from 'lucide-react'
 import { useNavigate } from 'react-router'
 import SectionCard from '../../../components/common/SectionCard'
 import type { Template } from '../../../types/template'
+import DynamicFormRenderer from '../../form-engine/DynamicFormRenderer'
+import { defaultTemplateFields } from '../../../data/mockTemplateSchema'
+import { buildInitialFormData } from '../../form-engine/utils/buildInitialFormData'
 
 type TemplateDetailProps = {
   template: Template | null
-}
-
-function PreviewBlock({ title, items }: { title: string; items: string[] }) {
-  return (
-    <div className="rounded-xl border border-slate-200 p-4">
-      <div className="text-sm font-semibold text-slate-800">{title}</div>
-      <div className="mt-3 flex flex-wrap gap-2">
-        {items.map((item) => (
-          <span key={item} className="px-2.5 py-1 rounded-full bg-slate-100 text-slate-600 text-xs">
-            {item}
-          </span>
-        ))}
-      </div>
-    </div>
-  )
 }
 
 export default function TemplateDetail({ template }: TemplateDetailProps) {
@@ -39,51 +27,64 @@ export default function TemplateDetail({ template }: TemplateDetailProps) {
     )
   }
 
-  return (
-    <div className="space-y-6">
-      <SectionCard
-        title="模板详情"
-        extra={
-          <div className="flex items-center gap-2">
-            <button className="h-9 px-3 rounded-xl border border-slate-200 text-sm text-slate-600 hover:bg-slate-50">
-              复制模板
-            </button>
-            <button
-              onClick={() => navigate('/templates/builder')}
-              className="h-9 px-3 rounded-xl bg-blue-600 text-white text-sm font-medium hover:bg-blue-700"
-            >
-              编辑模板
-            </button>
-          </div>
-        }
-      >
-        <div className="grid grid-cols-4 gap-4">
-          <div className="rounded-xl bg-slate-50 p-4">
-            <div className="text-xs text-slate-400">模板名称</div>
-            <div className="mt-2 font-semibold text-slate-900">{template.name}</div>
-          </div>
-          <div className="rounded-xl bg-slate-50 p-4">
-            <div className="text-xs text-slate-400">模板类型</div>
-            <div className="mt-2 font-semibold text-slate-900">{template.type}</div>
-          </div>
-          <div className="rounded-xl bg-slate-50 p-4">
-            <div className="text-xs text-slate-400">版本</div>
-            <div className="mt-2 font-semibold text-slate-900">{template.version}</div>
-          </div>
-          <div className="rounded-xl bg-slate-50 p-4">
-            <div className="text-xs text-slate-400">字段数</div>
-            <div className="mt-2 font-semibold text-slate-900">{template.fields}</div>
-          </div>
-        </div>
-      </SectionCard>
+  // Generate form data for preview based on the default fields
+  const formData = buildInitialFormData(defaultTemplateFields)
 
-      <SectionCard title="结构预览">
-        <div className="space-y-4">
-          {template.sections.map((section) => (
-            <PreviewBlock key={section.title} title={section.title} items={section.items} />
-          ))}
+  return (
+    <div className="flex flex-col space-y-6">
+      <div className="shrink-0">
+        <SectionCard
+          title="模板详情"
+          extra={
+            <div className="flex items-center gap-2">
+              <button className="h-9 px-3 rounded-xl border border-slate-200 text-sm text-slate-600 hover:bg-slate-50">
+                复制模板
+              </button>
+              <button
+                onClick={() => navigate('/templates/builder')}
+                className="h-9 px-3 rounded-xl bg-blue-600 text-white text-sm font-medium hover:bg-blue-700"
+              >
+                编辑模板
+              </button>
+            </div>
+          }
+        >
+          <div className="grid grid-cols-4 gap-4">
+            <div className="rounded-xl bg-slate-50 p-4">
+              <div className="text-xs text-slate-400">模板名称</div>
+              <div className="mt-2 font-semibold text-slate-900">{template.name}</div>
+            </div>
+            <div className="rounded-xl bg-slate-50 p-4">
+              <div className="text-xs text-slate-400">模板类型</div>
+              <div className="mt-2 font-semibold text-slate-900">{template.type}</div>
+            </div>
+            <div className="rounded-xl bg-slate-50 p-4">
+              <div className="text-xs text-slate-400">版本</div>
+              <div className="mt-2 font-semibold text-slate-900">{template.version}</div>
+            </div>
+            <div className="rounded-xl bg-slate-50 p-4">
+              <div className="text-xs text-slate-400">字段数</div>
+              <div className="mt-2 font-semibold text-slate-900">{template.fields}</div>
+            </div>
+          </div>
+        </SectionCard>
+      </div>
+
+      <div className="bg-white rounded-2xl border border-slate-200 shadow-sm flex flex-col overflow-hidden">
+        <div className="h-12 px-5 border-b border-slate-100 flex items-center shrink-0 font-semibold text-slate-800">
+          结构预览
         </div>
-      </SectionCard>
+        <div className="p-6 pointer-events-none">
+          <div className="max-w-3xl mx-auto">
+            <DynamicFormRenderer
+              fields={defaultTemplateFields}
+              formData={formData}
+              readOnly={true}
+              onChange={() => {}}
+            />
+          </div>
+        </div>
+      </div>
     </div>
   )
 }

@@ -1,7 +1,6 @@
 import { Plus } from 'lucide-react'
 import { useMemo, useState } from 'react'
 import { useNavigate } from 'react-router'
-import SectionCard from '../../components/common/SectionCard'
 import StatCard from '../../modules/dashboard/StatCard'
 import TemplateDetail from '../../modules/templates/components/TemplateDetail'
 import TemplateList from '../../modules/templates/components/TemplateList'
@@ -32,8 +31,8 @@ export default function TemplateCenterPage() {
 
   return (
     <div className="flex gap-6">
-      <div className="w-[380px] shrink-0 space-y-6">
-        <div className="grid grid-cols-3 gap-3">
+      <div className="w-[380px] shrink-0 flex flex-col gap-6">
+        <div className="grid grid-cols-3 gap-3 shrink-0">
           <StatCard 
             title="启用中" 
             value="2" 
@@ -63,22 +62,22 @@ export default function TemplateCenterPage() {
           />
         </div>
 
-        <SectionCard
-          title="模板列表"
-            extra={
-              <button
-                onClick={() => navigate('/templates/builder')}
-                className="h-9 px-3 rounded-xl bg-blue-600 text-white text-sm font-medium hover:bg-blue-700 flex items-center gap-2"
-              >
-                <Plus className="w-4 h-4" />
-                新建模板
-              </button>
-            }
-          >
+        <div className="flex-1 min-h-0 flex flex-col overflow-hidden bg-white rounded-2xl border border-slate-200 shadow-sm">
+          <div className="px-5 py-4 border-b border-slate-100 flex items-center justify-between shrink-0">
+            <div className="font-semibold text-slate-800">模板列表</div>
+            <button
+              onClick={() => navigate('/templates/builder')}
+              className="h-9 px-3 rounded-xl bg-blue-600 text-white text-sm font-medium hover:bg-blue-700 flex items-center gap-2"
+            >
+              <Plus className="w-4 h-4" />
+              新建模板
+            </button>
+          </div>
+          <div className="p-4 flex-1 overflow-auto flex flex-col">
             <div
               role="radiogroup"
               aria-label="模板状态筛选"
-              className="mb-4 inline-flex rounded-xl bg-slate-50 p-1"
+              className="mb-4 shrink-0 inline-flex rounded-xl bg-slate-50 p-1 self-start"
             >
               {[
                 { label: '全部', value: 'all' as const },
@@ -113,17 +112,20 @@ export default function TemplateCenterPage() {
                 )
               })}
             </div>
-            <TemplateList
-              templates={filteredTemplates}
-              selectedTemplateId={selectedTemplateId}
-              onSelect={setSelectedTemplateId}
-            />
-          </SectionCard>
-        </div>
-
-        <div className="flex-1 min-w-0">
-          <TemplateDetail template={selectedTemplate} />
+            <div className="flex-1 overflow-auto -mx-1 px-1">
+              <TemplateList
+                templates={filteredTemplates}
+                selectedTemplateId={selectedTemplateId}
+                onSelect={setSelectedTemplateId}
+              />
+            </div>
+          </div>
         </div>
       </div>
+
+      <div className="flex-1 min-w-0">
+        <TemplateDetail template={selectedTemplate} />
+      </div>
+    </div>
   )
 }
