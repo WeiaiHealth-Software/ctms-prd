@@ -48,8 +48,8 @@ export default function SubjectDetailPage() {
       </Link>
 
       <div className="flex items-start gap-6 relative">
-        {/* 左侧：固定 380px */}
-        <div className="w-[380px] shrink-0 sticky top-0 h-[calc(100vh-8rem)] overflow-y-auto space-y-4 pr-1 pb-4">
+        {/* 左侧：固定 320px */}
+        <div className="w-[320px] shrink-0 sticky top-0 h-[calc(100vh-8rem)] overflow-y-auto space-y-4 pr-1 pb-4">
           <div className="bg-blue-600 text-white rounded-2xl p-5 shadow-sm">
             <div className="text-xs text-blue-100">当前受试者</div>
             <div className="mt-2 text-2xl font-bold">{subject.initials}</div>
@@ -152,8 +152,8 @@ export default function SubjectDetailPage() {
           </div>
         </div>
 
-        {/* 右侧：固定 380px，目录 */}
-        <div className="w-[380px] shrink-0 sticky top-0 h-[calc(100vh-8rem)] overflow-y-auto pb-4">
+        {/* 右侧：固定 320px，目录 */}
+        <div className="w-[320px] shrink-0 sticky top-0 h-[calc(100vh-8rem)] overflow-y-auto pb-4">
           <SectionCard title="目录">
             <div className="space-y-1 mt-2">
               {sections.map((sec) => (
