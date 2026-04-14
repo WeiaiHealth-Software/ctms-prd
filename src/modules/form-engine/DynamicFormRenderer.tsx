@@ -19,14 +19,15 @@ export default function DynamicFormRenderer({
   return (
     <div className="space-y-5">
       {fields.map((field) => (
-        <DynamicFieldRenderer
-          key={field.id}
-          field={field}
-          value={formData[field.key]}
-          error={errors[field.key]}
-          readOnly={readOnly}
-          onChange={(value) => onChange(field.key, value)}
-        />
+        <div key={field.id} id={`field-${field.id}`}>
+          <DynamicFieldRenderer
+            field={field}
+            value={formData[field.key]}
+            error={errors[field.key]}
+            readOnly={readOnly}
+            onChange={(value) => onChange(field.key, value)}
+          />
+        </div>
       ))}
     </div>
   )
